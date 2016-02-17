@@ -13,6 +13,11 @@ module Deploy
     def deploy
       self.build_zip
 
+      environment = options[:environment]
+      version = options[:version]
+      build = options[:build]
+      repo = ENV['DOCKER_REPO']
+
       if build && !version_exists?(version)
         announce_title = "Deployment started with an image that was just built"
         build_image(repo, version)
@@ -28,17 +33,15 @@ module Deploy
 
     method_option :version, aliases: '-v', desc: 'Version', type: :string, required: true
     method_option :environment, aliases: '-e', desc: 'Environment', type: :string, required: true
-    desc 'build', 'build deploy.zip for testing (not needed before deploy)'
+    desc 'build_zip', 'build deploy.zip for testing (not needed before deploy)'
     def build_zip
       check_setup
 
       environment = options[:environment]
-      build = options[:build]
-
       version = options[:version]
-      check_version(version, environment)
-
       repo = ENV['DOCKER_REPO']
+
+      check_version(version, environment)
 
       use_tag_in_dockerrun(repo, version)
       create_deploy_zip_file
