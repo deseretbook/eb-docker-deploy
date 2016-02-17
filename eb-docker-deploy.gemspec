@@ -6,8 +6,8 @@ require 'deploy/version'
 Gem::Specification.new do |spec|
   spec.name          = "eb-docker-deploy"
   spec.version       = Deploy::VERSION
-  spec.authors       = ["Tim"]
-  spec.email         = ["thogg4@gmail.com"]
+  spec.authors       = ["Tim", "Mike", "Deseret Book"]
+  spec.email         = ["thogg4@gmail.com", "webdev@deseretbook.com"]
   spec.summary       = 'deploy with docker and aws eb'
   spec.description   = 'deploy with docker and aws eb'
   spec.homepage      = ""
@@ -25,6 +25,8 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'highline'
 
   spec.add_dependency 'aws-sdk', '~> 2'
+
+  spec.add_dependency 'rubyzip', '~> 1.1.7'
 
   spec.add_dependency 'slack-notifier'
 end

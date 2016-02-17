@@ -1,4 +1,5 @@
 require 'deploy/utility'
+require 'zip'
 
 module Deploy
   module Commands
@@ -20,9 +21,17 @@ module Deploy
       shout "Creating fake local git user"
       system "git config user.name 'deploy'; git config user.email 'deploy'"
 
-      shout "Creating deploy.zip"
-      command = "uploadStash=`git stash create`; git archive -o deploy.zip ${uploadStash:-HEAD}"
-      exit(1) unless system(command)
+      shout "Creating or overwriting deploy.zip"
+
+      File.unlink('deploy.zip') if File.exists?('deploy.zip')
+
+      Zip::File.open('deploy.zip', Zip::File::CREATE) do |zip|
+        Dir['.elasticbeanstalk/*', '.ebextensions/*', 'Dockerrun.aws.json'].each do |f|
+          zip.add(f, f)
+        end
+      end
+
+      exit(1) unless File.readable?('deploy.zip')
     end
 
     def use_tag_in_dockerrun(repo, tag)
@@ -45,13 +54,13 @@ module Deploy
 
     def run_deploy(version, environment)
       command = "eb deploy #{environment} --label #{version}"
-      shout "deploying #{version} to elastic beanstalk with command: #{command}"
+      shout "deploying #{version} to elastic beanstalk with command:\n\t#{command}"
       exit(1) unless system(command)
     end
 
     def run_rollback(version, environment)
       command = "eb deploy #{environment} --version #{version}"
-      shout "deploying #{version} to elastic beanstalk with command: #{command}"
+      shout "deploying #{version} to elastic beanstalk with command:\n\t#{command}"
       exit(1) unless system(command)
     end
 

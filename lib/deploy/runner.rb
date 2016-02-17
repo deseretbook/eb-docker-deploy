@@ -11,18 +11,7 @@ module Deploy
     method_option :build, aliases: '-b', desc: 'Build Image', type: :boolean, default: true
     desc 'deploy', 'deploy'
     def deploy
-      check_setup
-
-      environment = options[:environment]
-      build = options[:build]
-
-      version = options[:version]
-      check_version(version, environment)
-
-      repo = ENV['DOCKER_REPO']
-
-      use_tag_in_dockerrun(repo, version)
-      create_deploy_zip_file
+      self.build_zip
 
       if build && !version_exists?(version)
         announce_title = "Deployment started with an image that was just built"
@@ -35,6 +24,24 @@ module Deploy
       announce({ color: '#6080C0', title: announce_title, text: "Deploying version #{version} to #{environment}" })
       run_deploy(version, environment)
       announce({ color: 'good', title: 'Deployment Succeeded!!', text: "The current version of #{environment} is #{version}" })
+    end
+
+    method_option :version, aliases: '-v', desc: 'Version', type: :string, required: true
+    method_option :environment, aliases: '-e', desc: 'Environment', type: :string, required: true
+    desc 'build', 'build deploy.zip for testing (not needed before deploy)'
+    def build_zip
+      check_setup
+
+      environment = options[:environment]
+      build = options[:build]
+
+      version = options[:version]
+      check_version(version, environment)
+
+      repo = ENV['DOCKER_REPO']
+
+      use_tag_in_dockerrun(repo, version)
+      create_deploy_zip_file
     end
 
     desc 'send test notification', 'send test notification'
