@@ -11,7 +11,7 @@ module Deploy
     method_option :build, aliases: '-b', desc: 'Build Image', type: :boolean, default: true
     desc 'deploy [files...]', 'build deploy.zip and deploy to Elastic Beanstalk; use relative paths for extra files!'
     def deploy(*files)
-      self.build_zip
+      self.build_zip(*files)
 
       environment = options[:environment]
       version = options[:version]
