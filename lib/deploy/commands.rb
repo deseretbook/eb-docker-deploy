@@ -16,13 +16,20 @@ module Deploy
       exit(1) unless system(command)
     end
 
-    def create_deploy_zip_file
+    # *files will be added to the zip file if provided (use relative paths)
+    def create_deploy_zip_file(*files)
       shout "Creating or overwriting deploy.zip"
 
       File.unlink('deploy.zip') if File.exists?('deploy.zip')
 
       Zip::File.open('deploy.zip', Zip::File::CREATE) do |zip|
         Dir['.elasticbeanstalk/*', '.ebextensions/*', 'Dockerrun.aws.json'].each do |f|
+          puts "\tAdding #{f}"
+          zip.add(f, f)
+        end
+
+        files.each do |f|
+          puts "\t-- Adding #{f}"
           zip.add(f, f)
         end
       end

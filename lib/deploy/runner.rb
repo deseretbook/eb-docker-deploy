@@ -9,8 +9,8 @@ module Deploy
     method_option :version, aliases: '-v', desc: 'Version', type: :string, required: true
     method_option :environment, aliases: '-e', desc: 'Environment', type: :string, required: true
     method_option :build, aliases: '-b', desc: 'Build Image', type: :boolean, default: true
-    desc 'deploy', 'deploy'
-    def deploy
+    desc 'deploy [files...]', 'build deploy.zip and deploy to Elastic Beanstalk; use relative paths for extra files!'
+    def deploy(*files)
       self.build_zip
 
       environment = options[:environment]
@@ -33,8 +33,8 @@ module Deploy
 
     method_option :version, aliases: '-v', desc: 'Version', type: :string, required: true
     method_option :environment, aliases: '-e', desc: 'Environment', type: :string, required: true
-    desc 'build_zip', 'build deploy.zip for testing (not needed before deploy)'
-    def build_zip
+    desc 'build_zip [files...]', 'build deploy.zip for testing (not needed before deploy); use relative paths for extra files!'
+    def build_zip(*files)
       check_setup
 
       environment = options[:environment]
@@ -44,7 +44,7 @@ module Deploy
       check_version(version, environment)
 
       use_tag_in_dockerrun(repo, version)
-      create_deploy_zip_file
+      create_deploy_zip_file(*files)
     end
 
     desc 'send test notification', 'send test notification'
