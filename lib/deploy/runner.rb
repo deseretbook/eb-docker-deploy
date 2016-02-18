@@ -89,5 +89,9 @@ module Deploy
       shout('You must now run "source ~/.bashrc"')
     end
 
+    desc 'copy_env FROM TO', 'copy environment variables from one environment to another'
+    def copy_env(from, to)
+      copy_beanstalk_vars(from, to)
+    end
   end
 end
