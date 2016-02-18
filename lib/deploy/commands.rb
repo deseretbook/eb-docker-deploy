@@ -17,10 +17,6 @@ module Deploy
     end
 
     def create_deploy_zip_file
-      # to create the archive correctly we must set up a fake git user
-      shout "Creating fake local git user"
-      system "git config user.name 'deploy'; git config user.email 'deploy'"
-
       shout "Creating or overwriting deploy.zip"
 
       File.unlink('deploy.zip') if File.exists?('deploy.zip')
