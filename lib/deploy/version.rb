@@ -1,3 +1,3 @@
 module Deploy
-  VERSION = "1.4.0"
+  VERSION = "1.4.6"
 end

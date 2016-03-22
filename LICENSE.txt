@@ -1,4 +1,4 @@
-Copyright (c) 2015 Tim
+Copyright (c) 2016 Tim, Deseret Book, and contributors.
 
 MIT License
 

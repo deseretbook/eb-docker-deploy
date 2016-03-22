@@ -9,20 +9,14 @@ module Deploy
     method_option :version, aliases: '-v', desc: 'Version', type: :string, required: true
     method_option :environment, aliases: '-e', desc: 'Environment', type: :string, required: true
     method_option :build, aliases: '-b', desc: 'Build Image', type: :boolean, default: true
-    desc 'deploy', 'deploy'
-    def deploy
-      check_setup
+    desc 'deploy [files...]', 'build deploy.zip and deploy to Elastic Beanstalk; use relative paths for extra files!'
+    def deploy(*files)
+      self.build_zip(*files)
 
       environment = options[:environment]
-      build = options[:build]
-
       version = options[:version]
-      check_version(version, environment)
-
+      build = options[:build]
       repo = ENV['DOCKER_REPO']
-
-      use_tag_in_dockerrun(repo, version)
-      create_deploy_zip_file
 
       if build && !version_exists?(version)
         announce_title = "Deployment started with an image that was just built"
@@ -35,6 +29,22 @@ module Deploy
       announce({ color: '#6080C0', title: announce_title, text: "Deploying version #{version} to #{environment}" })
       run_deploy(version, environment)
       announce({ color: 'good', title: 'Deployment Succeeded!!', text: "The current version of #{environment} is #{version}" })
+    end
+
+    method_option :version, aliases: '-v', desc: 'Version', type: :string, required: true
+    method_option :environment, aliases: '-e', desc: 'Environment', type: :string, required: true
+    desc 'build_zip [files...]', 'build deploy.zip for testing (not needed before deploy); use relative paths for extra files!'
+    def build_zip(*files)
+      check_setup
+
+      environment = options[:environment]
+      version = options[:version]
+      repo = ENV['DOCKER_REPO']
+
+      check_version(version, environment)
+
+      use_tag_in_dockerrun(repo, version)
+      create_deploy_zip_file(*files)
     end
 
     desc 'send test notification', 'send test notification'
@@ -79,5 +89,9 @@ module Deploy
       shout('You must now run "source ~/.bashrc"')
     end
 
+    desc 'copy_env FROM TO', 'copy environment variables from one environment to another'
+    def copy_env(from, to)
+      copy_beanstalk_vars(from, to)
+    end
   end
 end
