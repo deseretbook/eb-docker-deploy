@@ -61,6 +61,12 @@ module Deploy
       end
     end
 
+    desc 'clean_old_versions', 'Remove all unused versions older than two days except the most recent 50'
+    def clean_old_versions
+      check_setup
+      delete_old_versions
+    end
+
     method_option :environment, aliases: '-e', desc: 'Environment', required: true
     desc 'show version', 'show environment version'
     def version
