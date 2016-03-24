@@ -40,6 +40,7 @@ module Deploy
       versions.each_with_index do |v, idx|
         if idx < versions.count - 50
           say "Deleting old version #{red v.version_label} from #{pink v.date_updated}"
+          eb.delete_application_version(application_name: application_name, version_label: v.version_label, delete_source_bundle: true)
         else
           say "Keeping version #{blue v.version_label} from #{pink v.date_updated}"
         end
