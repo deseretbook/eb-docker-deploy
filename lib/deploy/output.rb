@@ -44,6 +44,10 @@ module Deploy
       colorize(35, message)
     end
 
+    def blue(message)
+      colorize(34, message)
+    end
+
     def colorize(color_code, message)
       "\e[#{color_code}m#{message}\e[0m"
     end

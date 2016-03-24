@@ -47,12 +47,12 @@ module Deploy
       create_deploy_zip_file(*files)
     end
 
-    desc 'send test notification', 'send test notification'
+    desc 'test_slack', 'send test notification'
     def test_slack
       notifier('', { color: 'good', title: 'This is a test notification from eb-docker-deploy.' })
     end
 
-    desc 'list versions', 'list all application versions'
+    desc 'versions', 'list all application versions'
     def versions
       check_setup
 
@@ -61,15 +61,21 @@ module Deploy
       end
     end
 
+    desc 'clean_old_versions', 'Remove all unused versions older than two days except the most recent 50'
+    def clean_old_versions
+      check_setup
+      delete_old_versions
+    end
+
     method_option :environment, aliases: '-e', desc: 'Environment', required: true
-    desc 'show version', 'show environment version'
+    desc 'version', 'show environment version'
     def version
       check_setup
 
       shout current_version_for_environment(options[:environment])
     end
 
-    desc 'setup config', 'setup config'
+    desc 'setup', 'setup config'
     def setup
       (shout('AWS creds already configured in ~/.bashrc'); exit(1)) if ENV['AWS_ACCESS_KEY_ID'] && ENV['AWS_SECRET_ACCESS_KEY'] && ENV['AWS_REGION']
 

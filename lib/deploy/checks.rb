@@ -1,3 +1,5 @@
+require 'yaml'
+
 require 'deploy/utility'
 
 module Deploy
@@ -7,9 +9,16 @@ module Deploy
     def check_setup
       (shout('docker not installed'); exit(1)) unless command?('docker')
       (shout('eb command not installed'); exit(1)) unless command?('eb')
-      (shout('elasticbeanstalk not configured for this project. run "eb init".'); exit(1)) unless File.exist?('.elasticbeanstalk')
+      (shout('elasticbeanstalk not configured for this project. run "eb init".'); exit(1)) unless File.readable?('.elasticbeanstalk/config.yml')
       (shout('AWS credentials not configured.'); exit(1)) unless ENV['AWS_ACCESS_KEY_ID'] && ENV['AWS_SECRET_ACCESS_KEY'] && ENV['AWS_REGION']
       (shout('ENV DOCKER_REPO not set'); exit(1)) unless ENV['DOCKER_REPO']
+
+      @config = YAML.load_file('.elasticbeanstalk/config.yml')
+      @application_name = @config['global']['application_name']
+    end
+
+    def application_name
+      @application_name || (raise 'Call #check_setup first')
     end
 
     def check_rollback_version(version, environment)
