@@ -58,13 +58,13 @@ module Deploy
     def run_deploy(version, environment)
       command = "eb deploy #{environment} --label #{version} --timeout 60"
       shout "deploying #{version} to elastic beanstalk with command:\n\t#{command}"
-      exit(1) unless system(command)
+      exit(1) unless run_cli(command)
     end
 
     def run_rollback(version, environment)
       command = "eb deploy #{environment} --version #{version} --timeout 60"
       shout "deploying #{version} to elastic beanstalk with command:\n\t#{command}"
-      exit(1) unless system(command)
+      exit(1) unless run_cli(command)
     end
 
     # FIXME: Parsing command line output is brittle
