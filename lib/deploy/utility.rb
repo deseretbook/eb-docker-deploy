@@ -16,7 +16,7 @@ module Deploy
       exit_code = wait_thr.value.exitstatus
       puts resp
       puts err unless err.nil?
-      true unless resp.downcase.include?("error") || exist_code != 0
+      true unless resp.downcase.include?("error") || exit_code != 0
     end
 
   end
