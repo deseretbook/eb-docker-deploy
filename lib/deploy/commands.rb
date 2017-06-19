@@ -39,7 +39,7 @@ module Deploy
 
     def use_tag_in_dockerrun(repo, tag)
       shout "Changing Dockerrun.aws.json to contain latest tag"
-      command = "sed 's/<TAG>/#{tag}/' < Dockerrun.aws.json.template > Dockerrun.aws.json"
+      command = "sed 's/<TAG>/#{tag}/g' Dockerrun.aws.json.template > Dockerrun.aws.json"
       exit(1) unless system(command)
     end
 
