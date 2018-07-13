@@ -24,7 +24,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'thor'
   spec.add_dependency 'highline'
 
-  spec.add_dependency 'aws-sdk', '~> 3'
+  spec.add_dependency 'aws-sdk-elasticbeanstalk', '~> 1'
 
   spec.add_dependency 'rubyzip', '~> 1.1.7'
 
