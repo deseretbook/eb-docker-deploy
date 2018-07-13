@@ -1,7 +1,7 @@
 require 'thor'
 require 'highline/import'
 require 'slack-notifier'
-require 'aws-sdk'
+require 'aws-sdk-elasticbeanstalk'
 
 require 'deploy/output'
 require 'deploy/commands'
